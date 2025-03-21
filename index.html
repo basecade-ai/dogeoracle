@@ -557,7 +557,7 @@
           }
           
           // Call the real API
-          fetch('http://localhost:3001/api/fortune', {
+          fetch('https://oraclellm-production.up.railway.app/api/fortune', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, birthdate })
