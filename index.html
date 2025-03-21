@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mystical Doge Oracle - Crypto Token Divination</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+JP:wght@400;700&display=swap');
+    
+    :root {
+      --primary-color: #8c0303;
+      --secondary-color: #d4af37;
+      --bg-color: #0d0d0d;
+      --text-color: #eee8aa;
+      --panel-color: #1a1a1a;
+      --accent-color: #8c0303;
+    }
+    
+    body {
+      font-family: 'Cinzel', 'Noto Serif JP', serif;
+      background-color: var(--bg-color);
+      background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgdmlld0JveD0iMCAwIDUwIDUwIj48cGF0aCBkPSJNNTAsNTBIMFYwSDUwVjUwWk00OS43LDQ5LjdILjNWLjNINDkuN1Y0OS43WiIgZmlsbD0iIzMzMzMzMyIgZmlsbC1vcGFjaXR5PSIwLjEiLz48L3N2Zz4=');
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      color: var(--text-color);
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 900px;
+      margin: 20px auto;
+      background-color: var(--panel-color);
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--secondary-color);
+    }
+    
+    .container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--secondary-color), var(--primary-color), var(--secondary-color));
+    }
+    
+    h1 {
+      margin-top: 15px;
+      margin-bottom: 25px;
+      color: var(--secondary-color);
+      text-align: center;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
+      font-size: 1.8rem;
+    }
+    
+    .japanese-characters {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 0.9rem;
+      opacity: 0.8;
+      margin-top: -15px;
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+    }
+    
+    .video-container {
+      width: 100%;
+      max-width: 550px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+      height: 0;
+      box-shadow: 0 0 20px rgba(140, 3, 3, 0.5);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+    }
+    
+    .video-container video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(1.2) contrast(1.1);
+    }
+    
+    .video-container img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(1.2) contrast(1.1);
+    }
+    
+    .input-form {
+      width: 80%;
+      margin: 20px 0;
+      position: relative;
+    }
+    
+    .chat-input {
+      width: 100%;
+      padding: 15px;
+      padding-left: 45px;
+      border: 1px solid var(--secondary-color);
+      border-radius: 30px;
+      font-size: 16px;
+      outline: none;
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+      background-color: rgba(0, 0, 0, 0.6);
+      color: var(--text-color);
+      font-family: 'Cinzel', serif;
+      letter-spacing: 1px;
+    }
+    
+    .chat-input::placeholder {
+      color: rgba(238, 232, 170, 0.5);
+    }
+    
+    .chat-input:focus {
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+      border-color: var(--secondary-color);
+    }
+    
+    .input-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--secondary-color);
+      opacity: 0.7;
+    }
+    
+    .result-container {
+      width: 85%;
+      margin-top: 25px;
+      background-color: rgba(0, 0, 0, 0.4);
+      border-radius: 8px;
+      padding: 25px;
+      min-height: 200px;
+      display: none;
+      position: relative;
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+    
+    .result-container::before {
+      content: "";
+      position: absolute;
+      top: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0; 
+      height: 0; 
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 10px solid rgba(0, 0, 0, 0.4);
+    }
+    
+    .typing-container {
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--text-color);
+      font-family: 'Cinzel', serif;
+      letter-spacing: 0.5px;
+    }
+    
+    .deploy-button {
+      background: linear-gradient(135deg, var(--secondary-color), #b8860b);
+      color: #000;
+      border: none;
+      padding: 14px 30px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 30px;
+      cursor: pointer;
+      margin-top: 25px;
+      display: none;
+      transition: all 0.3s ease;
+      font-family: 'Cinzel', serif;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .deploy-button::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      bottom: -50%;
+      left: -50%;
+      background: linear-gradient(to bottom, rgba(229, 172, 142, 0), rgba(255,255,255,0.5) 50%, rgba(229, 172, 142, 0));
+      transform: rotateZ(60deg) translate(-5em, 7.5em);
+      animation: shine 3s infinite;
+      animation-delay: 0.5s;
+    }
+    
+    @keyframes shine {
+      0% {
+        transform: rotateZ(60deg) translate(-5em, 7.5em);
+      }
+      100% {
+        transform: rotateZ(60deg) translate(1em, -9em);
+      }
+    }
+    
+    .deploy-button:hover {
+      background: linear-gradient(135deg, #b8860b, var(--secondary-color));
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    }
+    
+    .loading {
+      display: none;
+      text-align: center;
+      margin: 20px 0;
+    }
+    
+    .loading-circle {
+      display: inline-block;
+      position: relative;
+      width: 80px;
+      height: 80px;
+    }
+    
+    .loading-circle div {
+      box-sizing: border-box;
+      display: block;
+      position: absolute;
+      width: 64px;
+      height: 64px;
+      margin: 8px;
+      border: 6px solid var(--secondary-color);
+      border-radius: 50%;
+      animation: loading-circle 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+      border-color: var(--secondary-color) transparent transparent transparent;
+    }
+    
+    .loading-circle div:nth-child(1) {
+      animation-delay: -0.45s;
+    }
+    
+    .loading-circle div:nth-child(2) {
+      animation-delay: -0.3s;
+    }
+    
+    .loading-circle div:nth-child(3) {
+      animation-delay: -0.15s;
+    }
+    
+    @keyframes loading-circle {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    
+    .loading p {
+      margin-top: 15px;
+      font-size: 16px;
+      letter-spacing: 1px;
+      color: var(--secondary-color);
+    }
+
+    .token-info {
+      background-color: rgba(0, 0, 0, 0.6);
+      border: 1px solid var(--secondary-color);
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+      font-weight: bold;
+      display: none;
+      color: var(--secondary-color);
+      letter-spacing: 1px;
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+    }
+    
+    .token-info .label {
+      color: var(--text-color);
+      opacity: 0.8;
+      font-size: 14px;
+      margin-right: 5px;
+    }
+    
+    .token-info .value {
+      color: var(--secondary-color);
+      font-size: 18px;
+    }
+    
+    .token-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    
+    .token-row:last-child {
+      margin-bottom: 0;
+    }
+    
+    .candles {
+      position: absolute;
+      top: 20px;
+      display: flex;
+      width: 85%;
+      justify-content: space-between;
+      z-index: -1;
+      opacity: 0.8;
+    }
+    
+    .candle {
+      height: 40px;
+      width: 10px;
+      background: linear-gradient(to bottom, #ff9d00, #ff4d00);
+      border-radius: 5px 5px 0 0;
+      position: relative;
+    }
+    
+    .candle::after {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: 3px;
+      width: 4px;
+      height: 10px;
+      background: radial-gradient(ellipse at center, #ffde59 0%, #ff9d00 60%, rgba(255, 157, 0, 0) 100%);
+      border-radius: 50% 50% 0 0;
+      animation: flicker 1s infinite alternate;
+    }
+    
+    .candle:nth-child(odd) {
+      height: 30px;
+    }
+    
+    .candle:nth-child(3n) {
+      height: 45px;
+      animation-delay: 0.3s;
+    }
+    
+    .candle:nth-child(2n) {
+      animation-delay: 0.1s;
+    }
+    
+    .candle:nth-child(5n) {
+      animation-delay: 0.5s;
+    }
+    
+    @keyframes flicker {
+      0%, 100% {
+        box-shadow: 0 0 5px #ffde59, 0 0 10px #ffde59, 0 0 15px #ffde59, 0 0 20px #ffde59;
+        transform: translateY(0) scale(1);
+      }
+      50% {
+        box-shadow: 0 0 5px #ffde59, 0 0 8px #ffde59, 0 0 12px #ffde59, 0 0 15px #ffde59;
+        transform: translateY(1px) scale(0.98);
+      }
+    }
+    
+    .seal {
+      position: absolute;
+      bottom: 20px;
+      right: 30px;
+      width: 70px;
+      height: 70px;
+      opacity: 0.2;
+    }
+    
+    .coin-symbols {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: -1;
+    }
+    
+    .symbol {
+      position: absolute;
+      font-size: 1.5rem;
+      color: var(--secondary-color);
+      opacity: 0.1;
+      animation: float 15s infinite linear;
+    }
+    
+    @keyframes float {
+      0% {
+        transform: translateY(0);
+        opacity: 0.1;
+      }
+      50% {
+        opacity: 0.2;
+      }
+      100% {
+        transform: translateY(-700px);
+        opacity: 0.1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="candles">
+      <div class="candle"></div>
+      <div class="candle"></div>
+      <div class="candle"></div>
+      <div class="candle"></div>
+      <div class="candle"></div>
+      <div class="candle"></div>
+      <div class="candle"></div>
+    </div>
+    
+    <h1>MYSTICAL DOGE ORACLE</h1>
+    <div class="japanese-characters">神秘的な占い師ドージ</div>
+    
+    <div class="video-container">
+      <video id="dogeVideo" autoplay loop muted playsinline>
+        <source src="./doge/doge.mp4" type="video/mp4">
+        <!-- Fallback for browsers that don't support video -->
+        <img src="/api/placeholder/550/309" alt="Mystical Doge Oracle">
+      </video>
+    </div>
+    
+    <div class="input-form">
+      <span class="input-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="#d4af37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <input type="text" class="chat-input" id="userInput" placeholder="Enter your name and birth date (e.g. John 19980214)" autocomplete="off">
+    </div>
+    
+    <div class="loading">
+      <div class="loading-circle">
+        <div></div><div></div><div></div><div></div>
+      </div>
+      <p>The Oracle is reading your celestial path...</p>
+    </div>
+    
+    <div class="result-container" id="resultContainer">
+      <div class="token-info" id="tokenInfo">
+        <div class="token-row">
+          <span class="label">TOKEN NAME:</span>
+          <span class="value" id="tokenNameValue"></span>
+        </div>
+        <div class="token-row">
+          <span class="label">TICKER:</span>
+          <span class="value" id="tokenTickerValue"></span>
+        </div>
+      </div>
+      <div class="typing-container" id="typingContainer"></div>
+    </div>
+    
+    <button class="deploy-button" id="deployButton">Deploy Coin</button>
+
+    <div class="seal">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="2" fill="none"/>
+        <path d="M50 5 L55 20 L70 10 L60 25 L75 30 L60 35 L70 50 L55 40 L50 55 L45 40 L30 50 L40 35 L25 30 L40 25 L30 10 L45 20 Z" fill="#d4af37"/>
+      </svg>
+    </div>
+    
+    <div class="coin-symbols">
+      <span class="symbol" style="left:10%; animation-duration:20s;">₿</span>
+      <span class="symbol" style="left:20%; animation-duration:15s; animation-delay:2s;">Ð</span>
+      <span class="symbol" style="left:30%; animation-duration:18s; animation-delay:5s;">Ξ</span>
+      <span class="symbol" style="left:40%; animation-duration:22s; animation-delay:1s;">₩</span>
+      <span class="symbol" style="left:60%; animation-duration:19s; animation-delay:3s;">₵</span>
+      <span class="symbol" style="left:70%; animation-duration:17s; animation-delay:6s;">Ł</span>
+      <span class="symbol" style="left:80%; animation-duration:21s; animation-delay:4s;">₭</span>
+      <span class="symbol" style="left:90%; animation-duration:16s; animation-delay:7s;">₮</span>
+    </div>
+  </div>
+
+  <script>
+    // Elements
+    const userInput = document.getElementById('userInput');
+    const resultContainer = document.getElementById('resultContainer');
+    const typingContainer = document.getElementById('typingContainer');
+    const tokenInfo = document.getElementById('tokenInfo');
+    const tokenNameValue = document.getElementById('tokenNameValue');
+    const tokenTickerValue = document.getElementById('tokenTickerValue');
+    const deployButton = document.getElementById('deployButton');
+    const loadingIndicator = document.querySelector('.loading');
+    const dogeImage = document.getElementById('dogeImage');
+    
+    // Store token data
+    let tokenData = {
+      name: '',
+      ticker: ''
+    };
+    
+    // Doge images (would be videos in production)
+    const dogeImages = [
+      '/api/placeholder/550/309', 
+      '/api/placeholder/550/310',
+      '/api/placeholder/550/311'
+    ];
+    
+    // Change Doge image every 4 seconds with fade effect
+    let currentImageIndex = 0;
+    setInterval(() => {
+      dogeImage.style.opacity = 0;
+      setTimeout(() => {
+        currentImageIndex = (currentImageIndex + 1) % dogeImages.length;
+        dogeImage.src = dogeImages[currentImageIndex];
+        dogeImage.style.opacity = 1;
+      }, 500);
+    }, 4000);
+    
+    // Handle Enter key press
+    userInput.addEventListener('keypress', function(event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        const userInputValue = userInput.value.trim();
+        
+        if (userInputValue) {
+          // Show loading and hide previous results
+          loadingIndicator.style.display = 'block';
+          resultContainer.style.display = 'none';
+          deployButton.style.display = 'none';
+          typingContainer.innerHTML = '';
+          tokenInfo.style.display = 'none';
+          
+          // Extract name and birthdate
+          const parts = userInputValue.split(' ');
+          let name, birthdate;
+          
+          if (parts.length >= 2) {
+            name = parts[0];
+            birthdate = parts[parts.length - 1];
+          } else {
+            name = "Seeker";
+            birthdate = parts[0];
+          }
+          
+          // Call the real API
+          fetch('http://localhost:3001/api/fortune', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, birthdate })
+          })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then(data => {
+            // Hide loading and show results
+            loadingIndicator.style.display = 'none';
+            resultContainer.style.display = 'block';
+            
+            // Store the token data
+            tokenData.name = data.tokenName;
+            tokenData.ticker = data.tokenTicker;
+            
+            // Display token info
+            tokenNameValue.textContent = tokenData.name;
+            tokenTickerValue.textContent = tokenData.ticker;
+            tokenInfo.style.display = 'block';
+            
+            // Type out the explanation
+            typeText(data.explanation);
+            
+            // Show deploy button
+            deployButton.style.display = 'block';
+          })
+          .catch(error => {
+            console.error('Error fetching fortune:', error);
+            loadingIndicator.style.display = 'none';
+            resultContainer.style.display = 'block';
+            typingContainer.innerHTML = "The mystical connection has been disrupted. Please try again.";
+          });
+        }
+      }
+    });
+    
+    // Typing animation effect
+    function typeText(text) {
+      let i = 0;
+      typingContainer.innerHTML = '';
+      
+      function type() {
+        if (i < text.length) {
+          if (text.charAt(i) === '\n') {
+            typingContainer.innerHTML += '<br>';
+          } else {
+            typingContainer.innerHTML += text.charAt(i);
+          }
+          i++;
+          
+          // Randomize typing speed for more natural effect
+          const randomSpeed = Math.floor(Math.random() * 30) + 30;
+          setTimeout(type, randomSpeed);
+        }
+      }
+      
+      type();
+    }
+    
+    // Generate mock response based on birthdate
+    function generateMockResponse(name, birthdate) {
+      // Hash function to generate consistent results for the same input
+      const hashCode = str => {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+          const char = str.charCodeAt(i);
+          hash = ((hash << 5) - hash) + char;
+          hash = hash & hash;
+        }
+        return Math.abs(hash);
+      };
+      
+      const hash = hashCode(birthdate);
+      
+      // Japanese-inspired elements and concepts
+      const elements = ['Fire', 'Water', 'Earth', 'Wind', 'Metal', 'Wood', 'Light', 'Shadow', 'Star', 'Moon', 'Thunder', 'Ice'];
+      const concepts = ['Dragon', 'Tiger', 'Phoenix', 'Turtle', 'Koi', 'Fox', 'Wolf', 'Rabbit', 'Bear', 'Crane', 'Samurai', 'Ninja'];
+      const attributes = ['Strength', 'Wisdom', 'Fortune', 'Patience', 'Agility', 'Creativity', 'Spirit', 'Insight', 'Prosperity', 'Freedom', 'Honor', 'Courage'];
+      const kojiCharacters = ['明', '光', '龍', '虎', '風', '水', '火', '地', '空', '心', '神', '道'];
+      
+      // Generate token name and ticker
+      const element = elements[hash % elements.length];
+      const concept = concepts[(hash + 3) % concepts.length];
+      const attribute = attributes[(hash + 6) % attributes.length];
+      const koji = kojiCharacters[(hash + 9) % kojiCharacters.length];
+      
+      // Create token name
+      const tokenName = `${element}${concept} ${attribute}`;
+      
+      // Generate ticker (3-4 character ticker)
+      let tickerBase = '';
+      tickerBase += element.charAt(0).toUpperCase();
+      tickerBase += concept.charAt(0).toUpperCase();
+      tickerBase += attribute.charAt(0).toUpperCase();
+      const tokenTicker = tickerBase + koji;
+      
+      // Zodiac elements based on birth month
+      const birthMonth = parseInt(birthdate.substring(4, 6)) || parseInt(birthdate.substring(2, 4)) || (hash % 12 + 1);
+      const zodiacSigns = ["Capricorn", "Aquarius", "Pisces", "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius"];
+      const zodiacSign = zodiacSigns[(birthMonth + 9) % 12];
+      
+      // Planetary alignments
+      const planets = ["Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"];
+      const alignedPlanet = planets[hash % planets.length];
+      
+      // Fortune phrases
+      const fortunePhrases = [
+        `The ancient scrolls reveal that ${name}'s destiny is aligned with the ${element.toLowerCase()} element. The spirit of ${concept} combined with the essence of ${attribute.toLowerCase()} has manifested a powerful token: ${tokenName}. This token carries the symbol ${koji}, which represents divine protection in ancient mysticism.`,
+        
+        `Through the sacred flames, I see your path clearly, ${name}. Born under the sign of ${zodiacSign}, your energy resonates with ${element.toLowerCase()} and the spirit of the ${concept.toLowerCase()}. The Oracle has divined your token: ${tokenName}, marked with the sacred glyph ${koji}. When ${alignedPlanet} aligns with your birth moon, this token will reveal its true power.`,
+        
+        `The fortune coins have spoken, ${name}. Your birth date carries the essence of ${element.toLowerCase()}, while your spirit animal is the ${concept.toLowerCase()}. The sacred combination has revealed your destined token: ${tokenName}, blessed with the power of ${attribute.toLowerCase()}. The ancient character ${koji} will bring protection to all who hold this token.`,
+        
+        `As the incense smoke forms patterns in the air, your destiny becomes clear, ${name}. The ${element.toLowerCase()} that burns within you takes the form of the mighty ${concept.toLowerCase()}, bestowing the gift of ${attribute.toLowerCase()}. Your token shall be known as ${tokenName}, carrying the sacred symbol ${koji} that has been passed down through generations of fortune tellers.`,
+        
+        `The ancient cards have aligned in a most auspicious pattern, ${name}. Your birth under the influence of ${zodiacSign} grants you the power of ${element.toLowerCase()}, embodied by the noble ${concept.toLowerCase()}. The Oracle bestows upon you the token ${tokenName}, inscribed with the character ${koji} - a symbol of great prosperity in the cycles to come.`
+      ];
+      
+      // Select a fortune explanation
+      const explanation = fortunePhrases[hash % fortunePhrases.length];
+      
+      return {
+        tokenName,
+        tokenTicker,
+        explanation
+      };
+    }
+    
+    // Modal elements for X share
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.innerHTML = `
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Share to X</h2>
+        <div class="tweet-preview">
+          <p>Hey @bankrbot deploy coin</p>
+          <p>name: <span id="modal-token-name"></span></p>
+          <p>ticker: <span id="modal-token-ticker"></span></p>
+        </div>
+        <button class="share-button">Share to X</button>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    
+    // Add modal styles
+    const styleElement = document.createElement('style');
+    styleElement.textContent = `
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+      }
+      
+      .modal-content {
+        background-color: var(--panel-color);
+        margin: 15% auto;
+        padding: 25px;
+        border: 1px solid var(--secondary-color);
+        width: 80%;
+        max-width: 500px;
+        border-radius: 8px;
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        position: relative;
+        animation: modalFadeIn 0.3s;
+      }
+      
+      @keyframes modalFadeIn {
+        from {opacity: 0; transform: translateY(-20px);}
+        to {opacity: 1; transform: translateY(0);}
+      }
+      
+      .close-button {
+        color: var(--secondary-color);
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: color 0.3s;
+      }
+      
+      .close-button:hover {
+        color: #fff;
+      }
+      
+      .modal h2 {
+        color: var(--secondary-color);
+        margin-top: 0;
+        font-family: 'Cinzel', serif;
+        letter-spacing: 1px;
+        text-align: center;
+      }
+      
+      .tweet-preview {
+        background-color: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        border-radius: 8px;
+        padding: 15px;
+        margin: 20px 0;
+        color: var(--text-color);
+        font-family: 'Cinzel', serif;
+      }
+      
+      .tweet-preview p {
+        margin: 8px 0;
+      }
+      
+      .share-button {
+        background: linear-gradient(135deg, var(--secondary-color), #b8860b);
+        color: #000;
+        border: none;
+        padding: 12px 24px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 30px;
+        cursor: pointer;
+        display: block;
+        margin: 0 auto;
+        transition: all 0.3s ease;
+        font-family: 'Cinzel', serif;
+        letter-spacing: 1px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      }
+      
+      .share-button:hover {
+        background: linear-gradient(135deg, #b8860b, var(--secondary-color));
+        transform: translateY(-2px);
+      }
+    `;
+    document.head.appendChild(styleElement);
+    
+    // Modal elements
+    const closeButton = modal.querySelector('.close-button');
+    const shareButton = modal.querySelector('.share-button');
+    const modalTokenName = modal.querySelector('#modal-token-name');
+    const modalTokenTicker = modal.querySelector('#modal-token-ticker');
+    
+    // Close modal when clicking the X
+    closeButton.addEventListener('click', function() {
+      modal.style.display = 'none';
+    });
+    
+    // Close modal when clicking outside the modal
+    window.addEventListener('click', function(event) {
+      if (event.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+    
+    // Share button functionality
+    shareButton.addEventListener('click', function() {
+      const tweetText = `Hey @bankrbot deploy coin\nname: ${tokenData.name}\nticker: ${tokenData.ticker}`;
+      const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+      window.open(tweetUrl, '_blank');
+      modal.style.display = 'none';
+    });
+    
+    // Deploy button functionality
+    deployButton.addEventListener('click', function() {
+      // Update modal content with current token data
+      modalTokenName.textContent = tokenData.name;
+      modalTokenTicker.textContent = tokenData.ticker;
+      
+      // Show the modal
+      modal.style.display = 'block';
+    });
+    
+    // Create floating coin symbols animation
+    function createSymbols() {
+      const symbolsContainer = document.querySelector('.coin-symbols');
+      const symbols = ['₿', 'Ð', 'Ξ', '₭', '₮', '₵', 'Ł', '₩'];
+      
+      for (let i = 0; i < 15; i++) {
+        const symbol = document.createElement('span');
+        symbol.className = 'symbol';
+        symbol.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        
+        // Random positions and animation timing
+        symbol.style.left = `${Math.random() * 100}%`;
+        symbol.style.top = `${Math.random() * 100 + 100}%`;
+        symbol.style.animationDuration = `${Math.random() * 10 + 15}s`;
+        symbol.style.animationDelay = `${Math.random() * 10}s`;
+        symbol.style.fontSize = `${Math.random() * 1 + 1}rem`;
+        
+        symbolsContainer.appendChild(symbol);
+      }
+    }
+    
+    // Initialize coin symbols
+    createSymbols();
+    
+    // Animate candle flames
+    const candles = document.querySelectorAll('.candle::after');
+    candles.forEach(candle => {
+      candle.style.animationDelay = `${Math.random() * 2}s`;
+    });
+  </script>
+</body>
+</html>
